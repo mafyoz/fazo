@@ -105,6 +105,7 @@ async function getSave() {
     const res = await services.getSave(store.token);
     store.like = res
 }
+
 const savedPost = async function () {
   if (store?.token) {
     const res = await services.postSave(store?.token, product?.slug);

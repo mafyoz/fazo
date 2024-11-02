@@ -60,6 +60,7 @@
                         <path d="M6.66675 22.6667H25.3334" stroke="white" stroke-width="2" stroke-linecap="round" />
                     </svg>
                 </button>
+
                 <form action="" class="header__center-form">
                     <input type="text" class="header__center-form__input" v-model="searchVal" placeholder="Qidirish..."
                         @input="search">
@@ -111,7 +112,18 @@
                             <span>{{ store.userInfo?.lastname }}</span>
                         </NuxtLink>
                     </li>
-                    <li>
+                    <li v-if="!store.token">
+                        <button @click="store.login = !store.login">
+                            <img src="/assets/images/svg/like.svg" alt="">
+                            <span>{{ t("fav") }}</span>
+                            <span v-if="store.like?.data?.items.length"
+                                class="flex item-center justify-center absolute top-0 right-0 w-[18px] h-[18px] rounded-full bg-indigo-600 translate-y-[-50%] translate-x-[50%] text-white text-xs kurjok-stil">{{
+                                    store.like?.data?.items.length }}</span>
+
+                        </button>
+
+                    </li>
+                    <li v-if="store.token">
                         <button @click="store.cartLike = true">
                             <img src="/assets/images/svg/like.svg" alt="">
                             <span>{{ t("fav") }}</span>
@@ -381,6 +393,7 @@ onMounted(() => {
         getUserInfo()
     }
 })
+
 watch(() => store.token, () => {
 
     getUserInfo()

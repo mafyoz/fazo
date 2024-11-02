@@ -35,7 +35,7 @@
                                             <li class="flex py-6" v-for="item in store.cart" :key="item">
                                                 <div
                                                     class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                    <img :src="item?.imageUrl" :alt="item?.name"
+                                                    <img :src="item?.thumbnail" :alt="item?.title"
                                                         class="h-full w-full object-cover object-center">
                                                 </div>
 
@@ -44,7 +44,7 @@
                                                         <div
                                                             class="flex justify-between text-base font-medium text-gray-900">
                                                             <h3>
-                                                                <nuxt-link :to="`/product/${item.id}`">{{ item?.name
+                                                                <nuxt-link :to="`/product/${item.id}`">{{ item?.title
                                                                     }}</nuxt-link>
                                                             </h3>
                                                             <p class="ml-4">{{ (item?.price *

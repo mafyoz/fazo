@@ -27,7 +27,7 @@
             </div>
 
             <div class="left_card-add-wrapper">
-              <button class="w-[22px] h-[22px] cart-btn" @click="addToCart(cartProduct)"
+              <button class="w-[22px] h-[22px] cart-btn" @click="toggleCart"
                 :class="{ 'active-cart': activeCart }">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 21 21" fill="none">
                   <path class=""
@@ -38,8 +38,9 @@
 
               <div class="detal-line"></div>
 
-              <button class="w-[25px] h-[25px] cart-btn-2" @click="addToLike(cartProductlike)"
+              <button class="w-[25px] h-[25px] cart-btn-2" @click="savedPost()"
                 :class="{ 'active-cart-2': activeCartlike }">
+                <!-- <pre>{{ store.like?.data }}</pre> -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <path class=""
                     d="M19.2494 5.64964C18.8306 5.21722 18.3332 4.87418 17.7858 4.64014C17.2385 4.4061 16.6517 4.28564 16.0592 4.28564C15.4667 4.28564 14.88 4.4061 14.3326 4.64014C13.7852 4.87418 13.2879 5.21722 12.869 5.64964L11.9997 6.54666L11.1304 5.64964C10.2843 4.77658 9.1367 4.2861 7.94013 4.2861C6.74356 4.2861 5.596 4.77658 4.7499 5.64964C3.9038 6.52271 3.42847 7.70683 3.42847 8.94153C3.42847 10.1762 3.9038 11.3604 4.7499 12.2334L5.61922 13.1304L11.9997 19.7142L18.3801 13.1304L19.2494 12.2334C19.6685 11.8012 20.001 11.288 20.2278 10.7232C20.4546 10.1583 20.5713 9.55293 20.5713 8.94153C20.5713 8.33013 20.4546 7.72472 20.2278 7.15989C20.001 6.59505 19.6685 6.08187 19.2494 5.64964Z"
@@ -138,6 +139,37 @@ const cartProduct = computed(() => {
   };
 });
 
+const toggleCart = () => {
+  // Agar mahsulot savatda bo'lsa, uni olib tashlaymiz, aks holda qo'shamiz
+  if (activeCart.value) {
+    removeFromCart(cartProduct.value); // Mahsulotni savatdan olib tashlash
+  } else {
+    handleaddToCart(cartProduct.value); // Mahsulotni savatga qo'shish
+  }
+  activeCart.value = !activeCart.value; // flagni o'zgartiramiz
+};
+
+const handleaddToCart = (product) =>{
+store.cart.push(product)
+}
+
+// const activeCart = ref(false)
+
+async function getSave() {
+    const res = await services.getSave(store.token);
+    store.like = res
+}
+
+const savedPost = async function () {
+  if (store?.token) {
+    const res = await services.postSave(store?.token, product?.slug);
+    getSave();
+  } else {
+    store.login = true;
+  }
+
+};
+
 
 const activeCart = computed(() => {
 
@@ -151,19 +183,19 @@ const activeCart = computed(() => {
 
 })
 
-const cartProductlike = computed(() => {
-  const item = {
-    name: product?.name,
-    id: product?.id,
-    imageUrl: product?.imageUrl,
-    price: product?.priceFormat,
-  }
-  return item;
-})
+// const cartProductlike = computed(() => {
+//   const item = {
+//     title: detail.value?.data?.product?.name,
+//     id: detail.value?.data?.product?.id,
+//     thumbnail: detail.value?.data?.product?.imageUrl,
+//     price: detail.value?.data?.product?.price,
+//   }
+//   return item;
+// })
 
 const activeCartlike = computed(() => {
 
-  const item = store.like?.data?.items.find((el) => el.id == product.id)
+  const item = store.like?.data?.items.find((el) => el.id == detail.id)
 
   if (item) {
     return true
